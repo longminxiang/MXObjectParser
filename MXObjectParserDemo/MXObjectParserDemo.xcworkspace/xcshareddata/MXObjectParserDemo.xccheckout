@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>5B3206BF-8856-44C3-9585-27B66B89E6AF</string>
+	<key>IDESourceControlProjectName</key>
+	<string>MXObjectParserDemo</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>DD3FEADBED43D395AA48CB96C541DEA76B57E19A</key>
+		<string>https://github.com/longminxiang/MXObjectParser.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>MXObjectParserDemo/MXObjectParserDemo.xcworkspace</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>DD3FEADBED43D395AA48CB96C541DEA76B57E19A</key>
+		<string>../..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>https://github.com/longminxiang/MXObjectParser.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>111</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>DD3FEADBED43D395AA48CB96C541DEA76B57E19A</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>DD3FEADBED43D395AA48CB96C541DEA76B57E19A</string>
+			<key>IDESourceControlWCCName</key>
+			<string>MXObjectParser</string>
+		</dict>
+	</array>
+</dict>
+</plist>

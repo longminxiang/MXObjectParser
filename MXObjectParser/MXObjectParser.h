@@ -8,6 +8,12 @@
 
 #import <Foundation/Foundation.h>
 
-@interface MXObjectParser : NSObject
+@interface NSObject (MXObjectParser)
+
++ (instancetype)mxp_instanceWithDictionary:(NSDictionary *)dic;
+
++ (instancetype)mxp_instanceWithDictionary:(NSDictionary *)dic mappers:(NSDictionary *)mappers;
+
++ (NSDictionary *)mxp_objClassInArray;
 
 @end

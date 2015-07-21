@@ -1,0 +1,14 @@
+PODS:
+  - MXObjectParser (0.1.0)
+
+DEPENDENCIES:
+  - MXObjectParser (from `../`)
+
+EXTERNAL SOURCES:
+  MXObjectParser:
+    :path: ../
+
+SPEC CHECKSUMS:
+  MXObjectParser: 9ae9783a9e6053f1c8111ae3727bb27d15806a2f
+
+COCOAPODS: 0.37.2
