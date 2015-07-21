@@ -29,7 +29,7 @@ typedef enum {
 @property (nonatomic, assign) MXObjectPropertyType type;
 @property (nonatomic, assign) Class ptyClass;
 
-+ (NSDictionary *)propertysWithClass:(Class)cls;
++ (NSDictionary *)propertiesWithClass:(Class)cls;
 
 @end
 
@@ -42,12 +42,13 @@ typedef enum {
     dispatch_once(&onceToken, ^{
         caches = [NSMutableDictionary new];
     });
+    NSLog(@"%@", caches);
     return caches;
 }
 
-#define MXTE(__s) [tstr isEqualToString:__s]
+#define MXTE(__s) [flag isEqualToString:__s]
 
-+ (NSDictionary *)propertysWithClass:(Class)cls
++ (NSDictionary *)propertiesWithClass:(Class)cls
 {
     NSString *cacheKey = NSStringFromClass(cls);
     NSDictionary *cache = [[self propertyCaches] valueForKey:cacheKey];
@@ -56,7 +57,7 @@ typedef enum {
     NSMutableDictionary *properties = [NSMutableDictionary new];
     
     if ([cls superclass] != [NSObject class]) {
-        NSDictionary *sproperties = [self propertysWithClass:[cls superclass]];
+        NSDictionary *sproperties = [self propertiesWithClass:[cls superclass]];
         [properties addEntriesFromDictionary:sproperties];
     }
     
@@ -79,19 +80,19 @@ typedef enum {
             property.ptyClass = NSClassFromString(clsName);
             property.type = MXObjectPropertyTypeId;
         }
-        else if (MXTE(@"Ti") || MXTE(@"TI")) {
+        else if (MXTE(@"i") || MXTE(@"I")) {
             property.type = MXObjectPropertyTypeInt;
         }
-        else if (MXTE(@"Tl") || MXTE(@"TL") || MXTE(@"Tq") || MXTE(@"TQ")) {
+        else if (MXTE(@"l") || MXTE(@"L") || MXTE(@"q") || MXTE(@"Q")) {
             property.type = MXObjectPropertyTypeLong;
         }
-        else if (MXTE(@"Tf")) {
+        else if (MXTE(@"f")) {
             property.type = MXObjectPropertyTypeFloat;
         }
-        else if (MXTE(@"Td")) {
+        else if (MXTE(@"d")) {
             property.type = MXObjectPropertyTypeDouble;
         }
-        else if (MXTE(@"TB") || MXTE(@"Tc")) {
+        else if (MXTE(@"B") || MXTE(@"c")) {
             property.type = MXObjectPropertyTypeBOOL;
         }
         else {
@@ -113,16 +114,16 @@ typedef enum {
 
 @implementation NSObject (MXObjectParser)
 
-+ (NSDictionary *)mxp_propertyTypes
++ (NSDictionary *)mxp_properties
 {
-    NSDictionary *types = [MXObjectProperty propertysWithClass:self];
+    NSDictionary *types = [MXObjectProperty propertiesWithClass:self];
     return types;
 }
 
 + (MXObjectProperty *)mxp_propertyWithName:(NSString *)pname
 {
-    NSDictionary *ptypes = [self mxp_propertyTypes];
-    return [ptypes valueForKey:pname];
+    NSDictionary *ptys = [self mxp_properties];
+    return [ptys valueForKey:pname];
 }
 
 + (NSDictionary *)mxp_objClassInArray
