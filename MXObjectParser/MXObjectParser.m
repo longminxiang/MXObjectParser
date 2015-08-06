@@ -42,7 +42,7 @@ typedef enum {
     dispatch_once(&onceToken, ^{
         caches = [NSMutableDictionary new];
     });
-    NSLog(@"%@", caches);
+//    NSLog(@"%@", caches);
     return caches;
 }
 
