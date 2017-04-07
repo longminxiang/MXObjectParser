@@ -10,6 +10,8 @@
 
 @interface NSObject (MXObjectParser)
 
+@property (nonatomic, readonly) NSDictionary *mxp_dictionary;
+
 + (instancetype)mxp_instanceWithDictionary:(NSDictionary *)dic;
 
 + (instancetype)mxp_instanceWithDictionary:(NSDictionary *)dic mappers:(NSDictionary *)mappers;
