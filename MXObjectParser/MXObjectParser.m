@@ -42,7 +42,6 @@ typedef enum {
     dispatch_once(&onceToken, ^{
         caches = [NSMutableDictionary new];
     });
-//    NSLog(@"%@", caches);
     return caches;
 }
 
@@ -154,64 +153,71 @@ typedef enum {
 {
     if (![dic isKindOfClass:[NSDictionary class]]) return nil;
     id instance = [self new];
-    [dic enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
-        NSString *nkey = mappers[key];
-        if (nkey) key = nkey;
-
+    
+    for (NSString *akey in dic.allKeys) {
+        id value = dic[akey];
+        NSString *key = mappers[akey] ? mappers[akey] : akey;
         MXObjectProperty *pty = [self mxp_propertyWithName:key];
-        if (!obj || [obj isKindOfClass:[NSNull class]]) {
-            obj = nil;
+        
+        if (!value || [value isKindOfClass:[NSNull class]] || !pty) {
+            continue;
         }
-        else if (pty.type == MXObjectPropertyTypeInt) {
-            obj = @([obj intValue]);
-        }
-        else if (pty.type == MXObjectPropertyTypeFloat) {
-            obj = @([obj floatValue]);
-        }
-        else if (pty.type == MXObjectPropertyTypeDouble) {
-            obj = @([obj doubleValue]);
-        }
-        else if (pty.type == MXObjectPropertyTypeBOOL) {
-            obj = @([obj boolValue]);
-        }
-        else if (pty.type == MXObjectPropertyTypeId) {
-            if ([obj isKindOfClass:[NSDictionary class]]) {
-                NSDictionary *mps = [self subMappersWithName:pty.name mappers:mappers];
-                id nobj = [pty.ptyClass mxp_instanceWithDictionary:obj mappers:mps];
-                obj = nobj;
-            }
-            else if ([obj isKindOfClass:[NSArray class]]) {
-                NSString *cstr = [self mxp_objClassInArray][key];
-                if (cstr) {
-                    NSMutableArray *nobjs = [NSMutableArray new];
-                    Class cls = NSClassFromString(cstr);
-                    [obj enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-                        NSDictionary *mps = [self subMappersWithName:pty.name mappers:mappers];
-                        id nsobj = [cls mxp_instanceWithDictionary:obj mappers:mps];
-                        [nobjs addObject:nsobj];
-                    }];
-                    obj = nobjs;
+        
+        switch (pty.type) {
+            case MXObjectPropertyTypeInt:value = @([value intValue]);break;
+            case MXObjectPropertyTypeLong:value = @([value longValue]);break;
+            case MXObjectPropertyTypeFloat:value = @([value floatValue]);break;
+            case MXObjectPropertyTypeDouble:value = @([value doubleValue]);break;
+            case MXObjectPropertyTypeBOOL:value = @([value boolValue]);break;
+            case MXObjectPropertyTypeId: {
+                if ([value isKindOfClass:[NSDictionary class]]) {
+                    NSDictionary *mps = [self subMappersWithName:pty.name mappers:mappers];
+                    id nobj = [pty.ptyClass mxp_instanceWithDictionary:value mappers:mps];
+                    value = nobj;
                 }
-            }
-            else if (pty.ptyClass == [NSDate class]) {
-                obj = [NSDate dateWithTimeIntervalSince1970:[obj doubleValue]];
-            }
-            else if (pty.ptyClass == [NSString class]) {
-                if (![obj isKindOfClass:[NSString class]]) {
-                    obj = [NSString stringWithFormat:@"%@", obj];
+                else if ([value isKindOfClass:[NSArray class]]) {
+                    NSString *cstr = [self mxp_objClassInArray][key];
+                    if (cstr) {
+                        NSMutableArray *nobjs = [NSMutableArray new];
+                        Class cls = NSClassFromString(cstr);
+                        [value enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+                            NSDictionary *mps = [self subMappersWithName:pty.name mappers:mappers];
+                            id nsobj = [cls mxp_instanceWithDictionary:obj mappers:mps];
+                            [nobjs addObject:nsobj];
+                        }];
+                        value = nobjs;
+                    }
                 }
+                else if (pty.ptyClass == [NSDate class]) {
+                    value = [NSDate dateWithTimeIntervalSince1970:[value doubleValue]];
+                }
+                else if (pty.ptyClass == [NSString class]) {
+                    if (![value isKindOfClass:[NSString class]]) {
+                        value = [NSString stringWithFormat:@"%@", value];
+                    }
+                }
+                else if (![value isKindOfClass:pty.ptyClass]) {
+                    continue;
+                }
+                break;
             }
-            else if (![obj isKindOfClass:pty.ptyClass]) {
-                obj = nil;
-            }
+            default: continue;
         }
-        @try {
-            [instance setValue:obj forKey:key];
-        }
-        @catch (NSException *exception) {
-        }
-    }];
+        
+        [instance setValue:value forKey:key];
+    }
+    [instance setMxp_dictionary:dic];
     return instance;
+}
+
+- (NSDictionary *)mxp_dictionary
+{
+    return objc_getAssociatedObject(self, _cmd);
+}
+
+- (void)setMxp_dictionary:(NSDictionary *)mxp_dictionary
+{
+    objc_setAssociatedObject(self, @selector(mxp_dictionary), mxp_dictionary, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
 @end
